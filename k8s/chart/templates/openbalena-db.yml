@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  creationTimestamp: null
+  labels:
+    app: openbalena
+    component: db
+  name: openbalena-db
+spec:
+  serviceName: openbalena-db
+  replicas: {{ index .Values "deployments" "db" "replicas" }}
+  selector:
+    matchLabels:
+      app: openbalena
+      component: db
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: openbalena
+        component: db
+    spec:
+      containers:
+      - image: '{{ index .Values "deployments" "db" "image" }}:{{ index .Values "deployments" "db" "version" }}'
+        name: openbalena-db
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: openbalena-db-volume
+          subPath: postgres
+      volumes:
+      - name: openbalena-db-volume
+        persistentVolumeClaim:
+          claimName: openbalena-db-volume
+  volumeClaimTemplates:
+  - metadata:
+      name: openbalena-db-volume
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ index .Values "deployments" "db" "volume" "storage" }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: openbalena
+    component: db
+  name: openbalena-db
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: openbalena
+    component: db
+status:
+  loadBalancer: {}

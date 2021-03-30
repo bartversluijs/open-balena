@@ -1,0 +1,64 @@
+{{- if index .Values "deployments" "redis" "enabled" }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  creationTimestamp: null
+  labels:
+    app: openbalena
+    component: redis
+  name: openbalena-redis
+spec:
+  serviceName: openbalena-redis
+  replicas: {{ index .Values "deployments" "redis" "replicas" }}
+  selector:
+    matchLabels:
+      app: openbalena
+      component: redis
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: openbalena
+        component: redis
+    spec:
+      containers:
+      - image: "{{ index .Values "deployments" "redis" "image" }}:{{ index .Values "deployments" "redis" "version" }}"
+        name: openbalena-redis
+        resources: {}
+        volumeMounts:
+        - mountPath: /data
+          name: openbalena-redis-volume
+          subPath: redis
+      volumes:
+      - name: openbalena-redis-volume
+        persistentVolumeClaim:
+          claimName: openbalena-redis-volume
+  volumeClaimTemplates:
+  - metadata:
+      name: openbalena-redis-volume
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ index .Values "deployments" "redis" "volume" "storage" }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: openbalena
+    component: redis
+  name: openbalena-redis
+spec:
+  ports:
+  - port: 6379
+    protocol: TCP
+    targetPort: {{ index .Values "deployments" "redis" "config" "port" }}
+  selector:
+    app: openbalena
+    component: redis
+status:
+  loadBalancer: {}
+{{- end }}
