@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: robotmaster-adyen-dev
+  namespace: default
+spec:
+  secretName: robotmaster-adyen-dev-tls
+  issuerRef:
+    name: ca-issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: Issuer
+  commonName: robotmaster.adyen.dev
+  organization:
+  - Adyen Dev
+  dnsNames:
+  - robotmaster.adyen.dev
+  - api.robotmaster.adyen.dev
