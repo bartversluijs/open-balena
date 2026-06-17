@@ -21,7 +21,6 @@ metadata:
 spec:
   tls:
   - hosts:
-    - {{ .Values.global.hostname }}
     - api.{{ .Values.global.hostname }}
     - registry.{{ .Values.global.hostname }}
 
