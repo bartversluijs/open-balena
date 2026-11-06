@@ -43,6 +43,15 @@ spec:
       - name: {{ .Chart.Name }}-db
         image: {{ .Values.db.image.repository }}:{{ .Values.db.image.tag }}
         imagePullPolicy: {{ .Values.db.image.pullPolicy }}
+        {{- with .Values.db.config }}
+        # Postgres settings passed as `-c key=value`; these override postgresql.conf on the volume
+        args:
+          - postgres
+          {{- range $key, $value := . }}
+          - -c
+          - {{ printf "%s=%v" $key $value | quote }}
+          {{- end }}
+        {{- end }}
         {{- with .Values.db.resources }}
         resources:
           {{- toYaml . | nindent 10 }}

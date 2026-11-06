@@ -116,6 +116,13 @@ api:
   resources: {}
   nodeSelector: {}
 
+  # Overrides for the API's own env file (config/env inside the image), e.g.:
+  #   envOverrides:
+  #     DB_POOL_SIZE: 20   # DB connections per worker (image default: 60)
+  #     NUM_WORKERS: 4     # worker processes per pod (image default: one per node CPU)
+  # Keep replicas x NUM_WORKERS x DB_POOL_SIZE below the database's max_connections.
+  envOverrides: {}
+
   service:
     labels: {}
     annotations: {}
@@ -204,6 +211,12 @@ db:
   affinity: {}
   resources: {}
   nodeSelector: {}
+
+  # Postgres settings, passed to the server as `-c key=value`, e.g.:
+  #   config:
+  #     max_connections: 250
+  #     shared_buffers: 1GB
+  config: {}
 
   service:
     labels: {}
