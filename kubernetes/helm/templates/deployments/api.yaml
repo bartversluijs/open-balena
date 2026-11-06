@@ -37,6 +37,10 @@ spec:
         {{- with .Values.api.labels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+      {{- if .Values.api.envOverrides }}
+      annotations:
+        checksum/env-overrides: {{ include (print $.Template.BasePath "/configmaps/api-env-overrides.yaml") . | sha256sum }}
+      {{- end }}
     spec:
       containers:
       - name: {{ .Chart.Name }}-api
@@ -135,6 +139,14 @@ spec:
           name: run
         - mountPath: /sys/fs/cgroup
           name: cgroup
+        {{- if .Values.api.envOverrides }}
+        - mountPath: /etc/systemd/system/open-balena-api.service.d/env-overrides.conf
+          name: env-overrides
+          subPath: env-overrides.conf
+        - mountPath: /etc/open-balena-api/env-overrides
+          name: env-overrides
+          subPath: env-overrides
+        {{- end }}
       volumes:
       - name: run
         emptyDir:
@@ -142,6 +154,11 @@ spec:
       - name: cgroup
         emptyDir:
           medium: Memory
+      {{- if .Values.api.envOverrides }}
+      - name: env-overrides
+        configMap:
+          name: {{ include "openbalena.fullname" . }}-api-env-overrides
+      {{- end }}
 
       {{- with .Values.api.nodeSelector  }}
       nodeSelector:

@@ -1,0 +1,22 @@
+{{- if .Values.api.envOverrides }}
+# The API runs under systemd inside the container, and its unit only reads the env file that
+# confd renders from the image's template (which hardcodes values such as DB_POOL_SIZE=60).
+# Container env vars never reach the API process. This systemd drop-in adds a second
+# EnvironmentFile, which systemd reads after the first, so its values win.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "openbalena.fullname" . }}-api-env-overrides
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbalena.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+data:
+  env-overrides.conf: |
+    [Service]
+    EnvironmentFile=/etc/open-balena-api/env-overrides
+  env-overrides: |
+    {{- range $key, $value := .Values.api.envOverrides }}
+    {{ $key }}={{ $value }}
+    {{- end }}
+{{- end }}
