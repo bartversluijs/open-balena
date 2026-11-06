@@ -15,10 +15,6 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with .Values.db.affinity }}
-  affinity:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
   serviceName: {{ include "openbalena.fullname" . }}-db
   selector:
     matchLabels:
@@ -82,6 +78,16 @@ spec:
 
       {{- with .Values.db.nodeSelector  }}
       nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.db.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.db.topologySpreadConstraints }}
+      topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}
   volumeClaimTemplates:

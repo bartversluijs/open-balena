@@ -16,10 +16,6 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with .Values.s3.affinity }}
-  affinity:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
   serviceName: {{ include "openbalena.fullname" . }}-s3
   selector:
     matchLabels:
@@ -84,6 +80,16 @@ spec:
 
       {{- with .Values.s3.nodeSelector  }}
       nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.s3.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.s3.topologySpreadConstraints }}
+      topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}
   volumeClaimTemplates:
