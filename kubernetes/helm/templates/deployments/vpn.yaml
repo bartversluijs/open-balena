@@ -15,10 +15,6 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with .Values.vpn.affinity }}
-  affinity:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
   replicas: {{ .Values.vpn.replicas }}
   strategy:
     type: Recreate
@@ -105,5 +101,15 @@ spec:
 
       {{- with .Values.vpn.nodeSelector  }}
       nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.vpn.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.vpn.topologySpreadConstraints }}
+      topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}

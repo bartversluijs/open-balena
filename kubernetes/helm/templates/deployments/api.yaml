@@ -15,10 +15,6 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with .Values.api.affinity }}
-  affinity:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "openbalena.selectorLabels" . | nindent 6 }}
@@ -162,5 +158,15 @@ spec:
 
       {{- with .Values.api.nodeSelector  }}
       nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.api.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.api.topologySpreadConstraints }}
+      topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -113,6 +113,7 @@ api:
   labels: {}
   annotations: {}
   affinity: {}
+  topologySpreadConstraints: []
   resources: {}
   nodeSelector: {}
 
@@ -141,6 +142,7 @@ vpn:
   labels: {}
   annotations: {}
   affinity: {}
+  topologySpreadConstraints: []
   resources: {}
   nodeSelector: {}
 
@@ -165,6 +167,7 @@ registry:
   labels: {}
   annotations: {}
   affinity: {}
+  topologySpreadConstraints: []
   resources: {}
   nodeSelector: {}
 
@@ -187,6 +190,7 @@ s3:
   labels: {}
   annotations: {}
   affinity: {}
+  topologySpreadConstraints: []
   resources: {}
   nodeSelector: {}
 
@@ -209,6 +213,7 @@ db:
   labels: {}
   annotations: {}
   affinity: {}
+  topologySpreadConstraints: []
   resources: {}
   nodeSelector: {}
 
@@ -253,6 +258,7 @@ redis:
   labels: {}
   annotations: {}
   affinity: {}
+  topologySpreadConstraints: []
   resources: {}
   nodeSelector: {}
 
